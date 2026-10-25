@@ -1,6 +1,10 @@
 package worker
 
-import "github.com/google/uuid"
+import (
+	"context"
+
+	"github.com/google/uuid"
+)
 
 type Status string
 
@@ -29,5 +33,5 @@ func NewJob(jobType string, payload []byte) *Job {
 }
 
 type Handler interface {
-	Process(job *Job) error
+	Process(ctx context.Context, job *Job) error
 }

@@ -1,6 +1,9 @@
 package worker
 
-import "fmt"
+import (
+	"fmt"
+	"context"
+)
 
 type Runner struct {
 	handlers map[string]Handler
@@ -30,7 +33,7 @@ func (r *Runner) Deregister(jobType string) error {
 	return nil
 }
 
-func (r *Runner) Run(job *Job) error {
+func (r *Runner) Run(ctx context.Context, job *Job) error {
 	handler, ok := r.handlers[job.Type]
 
 	if !ok {
@@ -39,7 +42,7 @@ func (r *Runner) Run(job *Job) error {
 	}
 
 	job.Status = StatusRunning
-	err := handler.Process(job)
+	err := handler.Process(ctx, job)
 	if err != nil {
 		job.Status = StatusFailed
 		return fmt.Errorf("error processing job: %s, %w", job.ID, err)
