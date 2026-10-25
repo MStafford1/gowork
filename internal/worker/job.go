@@ -1,5 +1,7 @@
 package worker
 
+import "github.com/google/uuid"
+
 type Status string
 
 const (
@@ -10,15 +12,15 @@ const (
 )
 
 type Job struct {
-	ID      string
+	ID      uuid.UUID
 	Type    string
 	Payload []byte
 	Status  Status
 }
 
-func NewJob(id string, jobType string, payload []byte) *Job {
+func NewJob(jobType string, payload []byte) *Job {
 	j := Job{
-		ID:      id,
+		ID:      uuid.New(),
 		Type:    jobType,
 		Payload: payload,
 		Status:  StatusPending,
